@@ -72,20 +72,20 @@ WITH CHECK (fn_obtener_rol_actual() = 'admin');
 -- --------------------------------------------------------------------
 -- POLÍTICAS RLS: roles, permisos, roles_permisos
 -- --------------------------------------------------------------------
--- Todos los usuarios autenticados pueden ver la lista de roles y permisos del sistema
+-- Usuarios anónimos y autenticados pueden ver el catálogo de roles y permisos
 CREATE POLICY "Lectura de catalogo de seguridad"
 ON roles FOR SELECT
-TO authenticated
+TO anon, authenticated
 USING (true);
 
 CREATE POLICY "Lectura de catalogo de permisos"
 ON permisos FOR SELECT
-TO authenticated
+TO anon, authenticated
 USING (true);
 
 CREATE POLICY "Lectura de roles_permisos"
 ON roles_permisos FOR SELECT
-TO authenticated
+TO anon, authenticated
 USING (true);
 
 -- Solo el rol Admin puede modificar el esquema de roles y permisos
@@ -98,11 +98,12 @@ WITH CHECK (fn_obtener_rol_actual() = 'admin');
 -- --------------------------------------------------------------------
 -- POLÍTICAS RLS: dispositivos
 -- --------------------------------------------------------------------
--- Todos los usuarios autenticados (Mecánico, Conductor, Pasajero) pueden ver el estado del hardware
+-- Lectura pública para telemetría vehicular en cabina
 CREATE POLICY "Lectura publica de dispositivos"
 ON dispositivos FOR SELECT
-TO authenticated
+TO anon, authenticated
 USING (true);
+
 
 -- Modificar estado de dispositivos (calibrar, desconectar, inyectar fallos):
 -- Conductor puede ver o reportar, pero solo el Admin (Mecánico) puede alterar o calibrar
